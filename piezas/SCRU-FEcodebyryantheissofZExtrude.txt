@@ -1,0 +1,129 @@
+//SCRU-FE by ZExtrude
+//www.ZExtrude.com for notes and tutorials on SCRU-FE
+//S.C.R.U.F.E. = Simple C++ Robot Ultrasonic-programming For Earthlings
+//written by Ryan Theiss 2015
+//written for SCRU-FE on Thingiverse.com assembled with an Arduino UNO and Keyes_L298P motor shield
+
+//define what the pins do - every board is different
+#define motorBdirection 13
+#define motorAdirection 12
+#define motorBpower 11
+#define motorApower 10
+#define servo 9
+#define trigPin 8
+#define echoPin 7
+#define Buzzer 4
+               
+void setup() {
+  
+  pinMode(servo, OUTPUT);  
+  pinMode(motorAdirection, OUTPUT);  
+  pinMode(motorBdirection, OUTPUT); 
+  pinMode(trigPin, OUTPUT);
+  pinMode(Buzzer, OUTPUT);  
+  
+    pinMode(echoPin, INPUT);
+  
+//PowerUp Sound - optional
+    tone(Buzzer, 647);          //  E start of power up tone! 432HZ
+    delay(150);
+    tone(Buzzer, 770);          //  g
+    delay(100);
+    tone(Buzzer, 1295);          // High E
+    delay(100);
+    tone(Buzzer, 1027);          // c
+    delay(100);    
+    tone(Buzzer, 1153);          // d
+    delay(150);
+    tone(Buzzer, 1539);          // High G
+    delay(100);
+    noTone(Buzzer);
+    delay(1000);
+}
+
+void loop(){
+
+//Turn Head to Center
+  analogWrite(servo, 150); 
+
+// Ping Utrasonic Sensor to find obstacles within distance in cm    
+  int duration, distance;
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(1000);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration/2) / 29.1;
+  
+  
+//Set distance
+  if (distance >= 15 || distance <= 0){
+
+//If the robot senses no obstacles within distance, 
+           
+//Move Forward  
+  analogWrite(motorApower, 100);
+  analogWrite(motorBpower, 100);
+  digitalWrite(motorAdirection, LOW);
+  digitalWrite(motorBdirection,LOW);
+  delay(200);
+
+//Coast          
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(10); 
+}
+
+
+
+//If robot senses something within distance
+  else {
+    
+//Turn Head Right
+     analogWrite(servo, 100);
+    
+//Motors Coast                   
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(10);  
+  
+ //Bump Sound                   
+    tone(Buzzer, 257);          //CGBE 432Hz
+    delay(20);
+    tone(Buzzer, 385);
+    delay(20);
+    tone(Buzzer, 485);        
+    delay(20);
+    tone(Buzzer, 647);        
+    delay(40);
+    noTone(Buzzer);
+    delay(0);
+
+//Motors Back Up                     
+   analogWrite(motorApower, 100);
+   analogWrite(motorBpower, 100);
+   digitalWrite(motorAdirection, HIGH);
+   digitalWrite(motorBdirection,HIGH);
+   delay(50);
+
+                   
+//Motors Coast                   
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(10); 
+   
+//Motors Turn Right                    
+  analogWrite(motorApower, 100);
+  analogWrite(motorBpower, 100);
+  digitalWrite(motorAdirection, LOW);
+  digitalWrite(motorBdirection,HIGH);
+  delay(200);
+  
+
+//Motors Coast                   
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(10); 
+  
+  }
+
+}

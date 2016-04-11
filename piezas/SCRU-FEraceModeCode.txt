@@ -1,0 +1,173 @@
+//SCRU-FE Race Mode CODE turns right else left - - little to no delays set
+
+//SCRU-FE by ZExtrude
+//www.ZExtrude.com for notes and tutorials on SCRU-FE
+//S.C.R.U.F.E. = Simple C++ Robot Ultrasonic-programming For Earthlings
+//written by Ryan Theiss 2015
+//written for SCRU-FE on Thingiverse.com assembled with an Arduino UNO and Keyes_L298P motor shield
+
+//define what the pins do - every board is different
+#define motorBdirection 13
+#define motorAdirection 12
+#define motorBpower 11
+#define motorApower 10
+#define servo 9
+#define trigPin 8
+#define echoPin 7
+#define Buzzer 4
+
+#include <Servo.h> 
+               
+void setup() {
+  
+  pinMode(servo, OUTPUT);  
+  pinMode(motorAdirection, OUTPUT);  
+  pinMode(motorBdirection, OUTPUT); 
+  pinMode(motorApower, OUTPUT);  
+  pinMode(motorBpower, OUTPUT); 
+  pinMode(trigPin, OUTPUT);
+  pinMode(Buzzer, OUTPUT);  
+  
+    pinMode(echoPin, INPUT);
+    
+    //Turn Head to Center
+  analogWrite(servo, 130); 
+  
+//PowerUp Sound - optional
+    tone(Buzzer, 647);          //  E start of power up tone! 432HZ
+    delay(150);
+    tone(Buzzer, 770);          //  g
+    delay(100);
+    tone(Buzzer, 1295);          // High E
+    delay(100);
+    tone(Buzzer, 1027);          // c
+    delay(100);    
+    tone(Buzzer, 1153);          // d
+    delay(150);
+    tone(Buzzer, 1539);          // High G
+    delay(100);
+    noTone(Buzzer);
+    delay(1000);
+}
+
+void loop(){
+
+//Turn Head to Center
+  analogWrite(servo, 130);
+ delay(0); 
+
+// Ping Utrasonic Sensor to find obstacles within distance in cm    
+  int duration, distance;
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(1000);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration/2) / 29.1;
+  
+  
+//Set distance
+  if (distance >= 30 || distance <= 0){
+
+//If the robot senses no obstacles within distance, 
+           
+//Move Forward  
+  analogWrite(motorApower, 255);
+  analogWrite(motorBpower, 255);
+  digitalWrite(motorAdirection, LOW);
+  digitalWrite(motorBdirection,LOW);
+  delay(100);
+
+//Coast          
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(0); 
+}
+
+
+
+//If robot senses somthing within distance
+  else {
+    
+//Turn Head Right
+     analogWrite(servo, 80);
+      delay(100); 
+      
+      // Ping Utrasonic Sensor to find obstacles within distance in cm    
+  int duration, distance;
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(1000);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration/2) / 29.1;
+     
+    if (distance >= 30 || distance <= 0){
+
+  
+
+
+//Motors Back Up                     
+   analogWrite(motorApower, 100);
+   analogWrite(motorBpower, 100);
+   digitalWrite(motorAdirection, HIGH);
+   digitalWrite(motorBdirection,HIGH);
+   delay(50);
+
+                   
+//Motors Coast                   
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(10); 
+   
+//Motors Turn Right                    
+  analogWrite(motorApower, 100);
+  analogWrite(motorBpower, 100);
+  digitalWrite(motorAdirection, LOW);
+  digitalWrite(motorBdirection,HIGH);
+  delay(300);
+  
+
+//Motors Coast                   
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(100); 
+  
+    }
+    
+    else{
+      
+      //Turn Head Left
+     analogWrite(servo, 200);
+      delay(100); 
+
+    
+
+
+//Motors Back Up                     
+   analogWrite(motorApower, 100);
+   analogWrite(motorBpower, 100);
+   digitalWrite(motorAdirection, HIGH);
+   digitalWrite(motorBdirection,HIGH);
+   delay(50);
+
+                   
+//Motors Coast                   
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(10); 
+   
+//Motors Turn Left                   
+  analogWrite(motorApower, 100);
+  analogWrite(motorBpower, 100);
+  digitalWrite(motorAdirection, HIGH);
+  digitalWrite(motorBdirection,LOW);
+  delay(300);
+  
+
+//Motors Coast                   
+  analogWrite(motorApower, 0);
+  analogWrite(motorBpower, 0);
+  delay(100); 
+    }
+  }
+
+}
