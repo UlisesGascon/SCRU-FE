@@ -1,3 +1,6 @@
+### :warning: WARNING: this repo is not maintained anymore
+
+
 # SCRU-FE
 
 Este repositorio es una mejora del modelo [SCRU-FE: Simple C++ Robot with Ultra-sonic-sensor For Education](http://www.thingiverse.com/thing:780050) de [rtheiss](http://www.thingiverse.com/rtheiss)
